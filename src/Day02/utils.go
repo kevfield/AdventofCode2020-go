@@ -40,7 +40,7 @@ func inputFlags() (string, string) {
 }
 
 // check password function to confirm which passwords are valid
-func checkPasswords(passwordlist []string) int {
+func checkPasswordsA(passwordlist []string) int {
 
 	// split the input into sections
 	// - min/max values
@@ -57,7 +57,7 @@ func checkPasswords(passwordlist []string) int {
 	var fullpassword string
 
 	// initialise correct password count and set to 0
-	correctpasswords := 0
+	correctpasswordsA := 0
 
 	for _, inputfileline := range passwordlist {
 		fmt.Sscanf(inputfileline, "%d-%d %s %s", &minvalue, &maxvalue, &passchar, &fullpassword)
@@ -66,9 +66,33 @@ func checkPasswords(passwordlist []string) int {
 		// start counting
 		countoccurances := strings.Count(fullpassword, passchartrimmed)
 		if countoccurances >= minvalue && countoccurances <= maxvalue {
-			correctpasswords = correctpasswords + 1
+			correctpasswordsA = correctpasswordsA + 1
 		}
 	}
 
-	return correctpasswords
+	return correctpasswordsA
+}
+
+func checkPasswordsB(passwordlist []string) int {
+
+	var minvalue int
+	var maxvalue int
+	var passchar rune
+	var fullpassword string
+
+	// initialise correct password count and set to 0
+	correctpasswordsB := 0
+
+	for _, inputfileline := range passwordlist {
+		fmt.Sscanf(inputfileline, "%d-%d %c: %s", &minvalue, &maxvalue, &passchar, &fullpassword)
+
+		if fullpassword[minvalue-1] == byte(passchar) && fullpassword[maxvalue-1] != byte(passchar) {
+			correctpasswordsB = correctpasswordsB + 1
+		} else if fullpassword[minvalue-1] != byte(passchar) && fullpassword[maxvalue-1] == byte(passchar) {
+			correctpasswordsB = correctpasswordsB + 1
+		}
+
+	}
+
+	return correctpasswordsB
 }

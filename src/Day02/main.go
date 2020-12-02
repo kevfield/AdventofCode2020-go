@@ -12,12 +12,17 @@ func main() {
 
 	if userpart == "a" {
 
-		puzzleanswer := checkPasswords(passwordlist)
+		puzzleanswer := checkPasswordsA(passwordlist)
 		fmt.Println("Amount of correct passwords in list: ", puzzleanswer)
+
+	} else if userpart == "b" {
+
+		output := checkPasswordsB(passwordlist)
+		fmt.Println(output)
 
 	} else {
 
-		fmt.Println("not coded yet")
+		fmt.Println("Invalid part choice specified, options are a or b")
 
 	}
 
