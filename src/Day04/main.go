@@ -27,9 +27,12 @@ func main() {
 
 	if partid == "a" {
 		// get the data from the input file
-		getpassportData(puzzleInput)
+		p1Result, _ := getpassportData(puzzleInput, partid)
+		fmt.Println("Result =", p1Result)
 
 	} else if partid == "b" {
+		_, p2result := getpassportData(puzzleInput, partid)
+		fmt.Println("Result = ", p2result)
 
 	} else {
 		fmt.Println("Invalid part id, please specify eiter a or b")
