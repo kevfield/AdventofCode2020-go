@@ -74,6 +74,7 @@ func getpassportData(passports []string, part string) (int, int) {
 	for j := 0; j < len(p); j++ {
 		pavalidItems = 0
 		pbvalidItems = 0
+		charMatch = 0
 
 		// part a
 		if len(p[j].byr) != 0 {
@@ -145,13 +146,14 @@ func getpassportData(passports []string, part string) (int, int) {
 			pavalidItems++
 		}
 		// part b
-		fmt.Println(p[j].hcl[0])
-		if p[j].hcl[0] == 35 {
-			if len(p[j].hcl) == 7 {
-				re := regexp.MustCompile(`[a-f0-9]`)
-				for l := 1; l <= len(p[j].hcl)-1; l++ {
-					if re.MatchString(p[j].hcl) == true {
-						charMatch++
+		if len(p[j].hcl) != 0 {
+			if p[j].hcl[0] == 35 {
+				if len(p[j].hcl) == 7 {
+					re := regexp.MustCompile(`[a-f0-9]`)
+					for l := 1; l <= len(p[j].hcl)-1; l++ {
+						if re.MatchString(p[j].hcl) == true {
+							charMatch++
+						}
 					}
 				}
 			}
