@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"flag"
-	"fmt"
 	"os"
 )
 
@@ -39,7 +38,7 @@ func inputFlags() (string, string) {
 	return flagfile, partid
 }
 
-func processLandingCards(input []string) {
+func processLandingCards(input []string) int {
 
 	var groupsCards map[byte]int
 	var countResponses int
@@ -49,6 +48,7 @@ func processLandingCards(input []string) {
 
 	for _, person := range input {
 		if person == "" {
+			// reset count responses
 			countResponses = 0
 			for _, value := range groupsCards {
 				if value >= 1 {
@@ -59,10 +59,6 @@ func processLandingCards(input []string) {
 			// found new group
 			// make new map
 			groupsCards = make(map[byte]int)
-			// reset count responses
-
-		} else {
-			//countResponses++
 		}
 		// loop through lines to get answers and add to map
 		for _, answer := range person {
@@ -70,7 +66,7 @@ func processLandingCards(input []string) {
 		}
 
 	}
-	// edge case, count last line if not counted
+	// edge case, count last line
 	countResponses = 0
 	for _, value := range groupsCards {
 		if value >= 1 {
@@ -79,5 +75,5 @@ func processLandingCards(input []string) {
 	}
 	totalResponses = totalResponses + countResponses
 
-	fmt.Println(totalResponses)
+	return totalResponses
 }
