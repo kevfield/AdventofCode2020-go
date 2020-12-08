@@ -38,27 +38,40 @@ func inputFlags() (string, string) {
 	return flagfile, partid
 }
 
-func processLandingCards(input []string) int {
+func processLandingCards(input []string) (int, int) {
 
 	var groupsCards map[byte]int
-	var countResponses int
-	var totalResponses int
+	var p1countResponses int
+	var p1totalResponses int
+	var p2countResponses int
+	var p2totalResponses int
+	newPerson := 0
 
 	groupsCards = make(map[byte]int)
 
 	for _, person := range input {
 		if person == "" {
 			// reset count responses
-			countResponses = 0
+			p1countResponses = 0
+			p2countResponses = 0
 			for _, value := range groupsCards {
 				if value >= 1 {
-					countResponses++
+					p1countResponses++
 				}
 			}
-			totalResponses = totalResponses + countResponses
+			for _, value := range groupsCards {
+				if value >= newPerson {
+					p2countResponses++
+				}
+			}
+			newPerson = 0
+			p1totalResponses = p1totalResponses + p1countResponses
+			p2totalResponses = p2totalResponses + p2countResponses
 			// found new group
 			// make new map
 			groupsCards = make(map[byte]int)
+		} else {
+			newPerson++
 		}
 		// loop through lines to get answers and add to map
 		for _, answer := range person {
@@ -66,14 +79,22 @@ func processLandingCards(input []string) int {
 		}
 
 	}
-	// edge case, count last line
-	countResponses = 0
+	// edge case p1, count last line
+	p1countResponses = 0
 	for _, value := range groupsCards {
 		if value >= 1 {
-			countResponses++
+			p1countResponses++
 		}
 	}
-	totalResponses = totalResponses + countResponses
+	p1totalResponses = p1totalResponses + p1countResponses
 
-	return totalResponses
+	// edge p2
+	p2countResponses = 0
+	for _, value := range groupsCards {
+		if value >= len(groupsCards) {
+			p2countResponses++
+		}
+	}
+	p2totalResponses = p2totalResponses + p2countResponses
+	return p1totalResponses, p2totalResponses
 }
