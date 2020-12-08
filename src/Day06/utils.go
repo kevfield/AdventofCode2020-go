@@ -91,7 +91,7 @@ func processLandingCards(input []string) (int, int) {
 	// edge p2
 	p2countResponses = 0
 	for _, value := range groupsCards {
-		if value >= len(groupsCards) {
+		if value >= newPerson {
 			p2countResponses++
 		}
 	}
