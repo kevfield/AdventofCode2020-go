@@ -5,8 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
-	"unicode/utf8"
 )
 
 // read a file from an input and return into a slice of strings
@@ -22,6 +20,7 @@ func readFile(filename string) ([]string, error) {
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
+	//lines = append(lines, "")
 	return lines, scanner.Err()
 }
 
@@ -41,46 +40,44 @@ func inputFlags() (string, string) {
 }
 
 func processLandingCards(input []string) {
-	var newstuff string
-	count := 0
-	totalfoundmatches := 0
-	foundMatches := 0
-	partbCount := 0
-	totalpartb := 0
-	var dict map[rune]int
 
-	for _, line := range input {
-		if len(line) == 0 {
-			partbCount = 0
-			dict = make(map[rune]int, 0)
-			for len(newstuff) > 0 {
+	var groupsCards map[byte]int
+	var countResponses int
+	var totalResponses int
 
-				r, size := utf8.DecodeRuneInString(strings.ToLower(newstuff))
-				//fmt.Printf("%c %v\n", r, size)
-				newstuff = newstuff[size:]
-				if dict[r] > 1 {
-					continue
+	groupsCards = make(map[byte]int)
+
+	for _, person := range input {
+		if person == "" {
+			countResponses = 0
+			for _, value := range groupsCards {
+				if value >= 1 {
+					countResponses++
 				}
-				//fmt.Println(dict[r])
-				if dict[r] == 1 {
-					count++
-				}
-				dict[r]++
 			}
-			//part a
-			foundMatches = len(dict)
-
-			totalfoundmatches = totalfoundmatches + foundMatches
-			totalpartb = totalpartb + partbCount
+			totalResponses = totalResponses + countResponses
+			// found new group
+			// make new map
+			groupsCards = make(map[byte]int)
+			// reset count responses
 
 		} else {
-			for _, i := range strings.Split(line, " ") {
-				newstuff = newstuff + strings.Replace(i, "\n", "", -1)
-			}
+			//countResponses++
+		}
+		// loop through lines to get answers and add to map
+		for _, answer := range person {
+			groupsCards[byte(answer)]++
 		}
 
 	}
+	// edge case, count last line if not counted
+	countResponses = 0
+	for _, value := range groupsCards {
+		if value >= 1 {
+			countResponses++
+		}
+	}
+	totalResponses = totalResponses + countResponses
 
-	fmt.Println("Part a: ", totalfoundmatches)
-	fmt.Println("Part b: ", totalpartb)
+	fmt.Println(totalResponses)
 }
