@@ -49,7 +49,7 @@ func processOperations(pInput []string) (int, bool) {
 	return p1accumulator, p2Found
 }
 
-func changeInstructions(p2Input []string) int {
+func changeInstructions(p2Input []string, fileLoc string) int {
 	var returnfromP1 int
 	//p2currentPos := 0
 	var p2Result bool
@@ -57,39 +57,44 @@ func changeInstructions(p2Input []string) int {
 	p2foundInstruction := ""
 	p2nopAmount := ""
 	p2jmpAmount := ""
+	// make and copy input slice into new slice
+	sliceToSend, _ := readFile(fileLoc)
 
-	for i, j := range p2Input {
+	for i, j := range sliceToSend {
 		if p2Result == false {
 			if changedInstructions[i] == false {
 				// find nop and jmp and change them
 				fmt.Sscanf(j, "%s", &p2foundInstruction)
 				if p2foundInstruction == "nop" {
 					// get amount
-					fmt.Sscanf(p2Input[i], "nop%s", &p2nopAmount)
-					p2Input[i] = "jmp " + p2nopAmount
+					fmt.Sscanf(sliceToSend[i], "nop%s", &p2nopAmount)
+					sliceToSend[i] = "jmp " + p2nopAmount
 					changedInstructions[i] = true
-					returnfromP1, p2Result = processOperations(p2Input)
+					returnfromP1, p2Result = processOperations(sliceToSend)
 
 				} else if p2foundInstruction == "jmp" {
 
 					// get amount
-					fmt.Sscanf(p2Input[i], "jmp%s", &p2jmpAmount)
-					p2Input[i] = "nop " + p2jmpAmount
+					fmt.Sscanf(sliceToSend[i], "jmp%s", &p2jmpAmount)
+					sliceToSend[i] = "nop " + p2jmpAmount
 					changedInstructions[i] = true
-					returnfromP1, p2Result = processOperations(p2Input)
+					returnfromP1, p2Result = processOperations(sliceToSend)
 				}
 
 			} else {
 				// instruction already changed, just process
-				returnfromP1, p2Result = processOperations(p2Input)
+				returnfromP1, p2Result = processOperations(sliceToSend)
 			}
 		} else {
 			// p2 found
 			break
 		}
+		//reset variables
 		p2foundInstruction = ""
 		p2nopAmount = ""
 		p2jmpAmount = ""
+		// reset input file
+		sliceToSend, _ = readFile(fileLoc)
 	}
 
 	return returnfromP1
@@ -107,7 +112,7 @@ func main() {
 	fmt.Println("Part 1: ", p1Answer)
 
 	// Part 2
-	p2Answer := changeInstructions(puzzleInput)
+	p2Answer := changeInstructions(puzzleInput, inputFile)
 	fmt.Println("Part 2: ", p2Answer)
 
 }
