@@ -14,37 +14,38 @@ func processOperations(pInput []string) (int, bool) {
 	var foundInstruction string
 
 	for usedInstructions[currentPos] == false {
-		if currentPos > len(pInput) {
+		fmt.Sscanf(pInput[currentPos], "%s", &foundInstruction)
+
+		if foundInstruction == "acc" {
+			// get acc instruction
+			fmt.Sscanf(pInput[currentPos], "acc%d", &accAmount)
+			usedInstructions[currentPos] = true
+			p1accumulator = p1accumulator + accAmount
+			currentPos = currentPos + 1
+
+		} else if foundInstruction == "nop" {
+			usedInstructions[currentPos] = true
+			currentPos = currentPos + 1
+
+		} else if foundInstruction == "jmp" {
+			fmt.Sscanf(pInput[currentPos], "jmp%d", &jmpAmount)
+			usedInstructions[currentPos] = true
+			currentPos = currentPos + jmpAmount
+
+		}
+
+		if currentPos >= len(pInput) {
 			// p2 found
 			p2Found = true
 			break
 
-		} else {
-			fmt.Sscanf(pInput[currentPos], "%s", &foundInstruction)
-
-			if foundInstruction == "acc" {
-				// get acc instruction
-				fmt.Sscanf(pInput[currentPos], "acc%d", &accAmount)
-				usedInstructions[currentPos] = true
-				p1accumulator = p1accumulator + accAmount
-				currentPos = currentPos + 1
-
-			} else if foundInstruction == "nop" {
-				usedInstructions[currentPos] = true
-				currentPos = currentPos + 1
-
-			} else if foundInstruction == "jmp" {
-				fmt.Sscanf(pInput[currentPos], "jmp%d", &jmpAmount)
-				usedInstructions[currentPos] = true
-				currentPos = currentPos + jmpAmount
-
-			}
-
-			// reset variables
-			foundInstruction = ""
-			accAmount = 0
-			jmpAmount = 0
 		}
+
+		// reset variables
+		foundInstruction = ""
+		accAmount = 0
+		jmpAmount = 0
+
 	}
 	return p1accumulator, p2Found
 }
